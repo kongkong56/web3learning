@@ -12,7 +12,18 @@ import Blog from '../artifacts/contracts/Blog.sol/Blog.json'
 
 /* define the ipfs endpoint */
 const client = create('https://ipfs.infura.io:5001/api/v0')
-
+// const projectId = '2BBaDCmjnK2L39Fv1UA7cngFCIs'
+// const projectSecret = 'cbd7a40235a010db9ca24219ce3916fa'
+// const auth =
+//   'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64')
+// const client = create({
+//   host: 'ipfs.infura.io',
+//   port: 5001,
+//   protocol: 'https',
+//   headers: {
+//     authorization: auth,
+//   },
+// })
 /* configure the markdown editor to be client-side import */
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
@@ -43,6 +54,8 @@ function CreatePost() {
 
   async function createNewPost() {
     /* saves post to ipfs then anchors to smart contract */
+    console.log(title)
+    console.log(content)
     if (!title || !content) return
     const hash = await savePostToIpfs()
     await savePost(hash)
@@ -52,7 +65,11 @@ function CreatePost() {
   async function savePostToIpfs() {
     /* save post metadata to ipfs */
     try {
-      const added = await client.add(JSON.stringify(post))
+      console.log(post)
+      console.log(client)
+      const jj = JSON.stringify(post)
+      const added = await client.add(jj)
+      console.log('added:::' + added)
       return added.path
     } catch (err) {
       console.log('error: ', err)
